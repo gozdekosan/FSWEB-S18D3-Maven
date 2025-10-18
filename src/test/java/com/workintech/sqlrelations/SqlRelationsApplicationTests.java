@@ -122,34 +122,40 @@ class SqlRelationsApplicationTests {
 				.collect(Collectors.toList()).get(0);
 
 		assertNotNull(foundSurgery);
+
+
 	}
 
 	@DisplayName("Operation tablosu mevcut mu ? Doğru oluşturulmuş mu ?")
-	@Test
-	void findOperationTest(){
-		Patient patient = new Patient();
-		patient.setName("Test");
-		patient.setSurname("Test");
-		patient.setEmail("test@test.com");
-		patient.setComplaint("TEST");
-		Patient savedPatient = patientRepository.save(patient);
+    @Test
+    void findOperationTest(){
+        Patient patient = new Patient();
+        patient.setName("Test");
+        patient.setSurname("Test");
+        patient.setEmail("test@test.com");
+        patient.setComplaint("TEST");
+        Patient savedPatient = patientRepository.save(patient);
 
-		Doctor doctor = new Doctor();
-		doctor.setName("Test");
-		doctor.setSurname("Test");
-		doctor.setProficiency("Cardiology");
-		Doctor savedDoctor = doctorRepository.save(doctor);
+        Doctor doctor = new Doctor();
+        doctor.setName("Test");
+        doctor.setSurname("Test");
+        doctor.setProficiency("Cardiology");
+        Doctor savedDoctor = doctorRepository.save(doctor);
 
-		Operation operation = new Operation();
-		operation.setPatientId(savedPatient.getId());
-		operation.setDoctorId(savedDoctor.getId());
-		operationRepository.save(operation);
+        Operation operation = new Operation();
+        operation.setPatientId(savedPatient.getId());
+        operation.setDoctorId(savedDoctor.getId());
+        operationRepository.save(operation);
 
-		List<Operation> operationList = operationRepository.findAll();
-		Operation foundOperation = operationList.stream()
-				.filter(operation1 -> operation1.getDoctorId() == 1)
-				.collect(Collectors.toList()).get(0);
+        List<Operation> operationList = operationRepository.findAll();
 
-		assertNotNull(foundOperation);
-	}
+        Operation foundOperation = operationList.stream()
+                .filter(op -> op.getDoctorId() == savedDoctor.getId())
+                .findFirst()
+                .orElse(null);
+
+
+        assertNotNull(foundOperation);
+    }
+
 }
